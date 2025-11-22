@@ -7,7 +7,6 @@ public class UIManager : MonoBehaviour
     public GameObject mainUI;
     public GameObject howToUseUI;
 
-
     // Show Main UI and hide How-To-Use UI
     public void ShowMainUI()
     {
@@ -22,11 +21,10 @@ public class UIManager : MonoBehaviour
         howToUseUI.SetActive(true);
     }
 
-    //  Hide everything
+    // Hide everything
     public void HideAllUI()
     {
         mainUI.SetActive(false);
         howToUseUI.SetActive(false);
     }
-
 }

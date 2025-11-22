@@ -1,28 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
+using TMPro;
+using UnityEngine;
 
-public class showKeyboard : MonoBehaviour
+[RequireComponent(typeof(TMP_InputField))]
+public class ShowKeyboard : MonoBehaviour
 {
-
     private TMP_InputField inputField;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    public static TMP_InputField ActiveInputField;
 
+    private void Awake()
+    {
         inputField = GetComponent<TMP_InputField>();
-
-        // Add listener for when the input field is selected
-        inputField.onSelect.AddListener(OpenKeyboard);
-
     }
-    public void OpenKeyboard(string text)
+
+    private void Start()
     {
+        inputField.onSelect.AddListener(OnSelected);
+    }
+
+    private void OnDestroy()
+    {
+        inputField.onSelect.RemoveListener(OnSelected);
+    }
+
+    private void OnSelected(string _)
+    {
+        ActiveInputField = inputField;
+
+        if (NonNativeKeyboard.Instance == null)
+        {
+            HUDLogger.Log("ShowKeyboard: NonNativeKeyboard.Instance is NULL");
+            return;
+        }
+
+        HUDLogger.Log("ShowKeyboard: Selected field = " + inputField.name);
+
         NonNativeKeyboard.Instance.InputField = inputField;
         NonNativeKeyboard.Instance.PresentKeyboard(inputField.text);
     }
-    
 }
