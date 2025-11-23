@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class FirebaseLoginManager : MonoBehaviour
 {
+    public static FirebaseLoginManager Instance;
+
     [Header("UI References")]
     public TMP_InputField emailInput;
     public TMP_InputField passwordInput;
@@ -21,12 +23,20 @@ public class FirebaseLoginManager : MonoBehaviour
     private FirebaseAuth auth;
     private bool firebaseReady = false;
 
-    private async void Start()
+    private async void Awake()
     {
-        if (statusText != null)
+        // Singleton pattern to persist across scenes
+        if (Instance != null && Instance != this)
         {
-            statusText.text = "Checking Firebase...";
+            Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        if (statusText != null)
+            statusText.text = "Checking Firebase...";
 
         await InitFirebase();
     }
@@ -37,35 +47,29 @@ public class FirebaseLoginManager : MonoBehaviour
         {
             var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
 
-            if (statusText != null)
-                statusText.text = "Deps: " + dependencyStatus;
-
             if (dependencyStatus == DependencyStatus.Available)
             {
                 auth = FirebaseAuth.DefaultInstance;
                 firebaseReady = true;
-
                 if (statusText != null)
                     statusText.text = "";
+                Debug.Log("Firebase Ready!");
             }
             else
             {
                 firebaseReady = false;
-
-                string msg =
-                    "Firebase not ready.\nDependencyStatus = " + dependencyStatus +
-                    "\nCheck google-services.json & Android setup.";
-
+                string msg = "Firebase not ready. Check google-services.json & Android setup.";
                 if (statusText != null)
                     statusText.text = msg;
+                Debug.LogError(msg);
             }
         }
         catch (Exception ex)
         {
             firebaseReady = false;
-
             if (statusText != null)
                 statusText.text = "Firebase init exception:\n" + ex.Message;
+            Debug.LogError("Firebase Init Exception: " + ex);
         }
     }
 
@@ -93,9 +97,7 @@ public class FirebaseLoginManager : MonoBehaviour
 
         try
         {
-            var loginTask = auth.SignInWithEmailAndPasswordAsync(email, password);
-            var userCredential = await loginTask;
-
+            var userCredential = await auth.SignInWithEmailAndPasswordAsync(email, password);
             FirebaseUser user = userCredential.User;
 
             if (statusText != null)
@@ -127,36 +129,25 @@ public class FirebaseLoginManager : MonoBehaviour
             if (statusText != null)
                 statusText.text = displayMessage;
 
-            // Reset after each failed login to keep behavior stable in VR
             ResetLoginUI();
         }
     }
 
-    /// <summary>
-    /// Clear fields and reset keyboard/focus after failed login.
-    /// </summary>
     private void ResetLoginUI()
     {
         if (emailInput != null)
-        {
             emailInput.text = "";
-        }
 
         if (passwordInput != null)
-        {
             passwordInput.text = "";
-        }
 
-        // Set email as active field
         if (emailInput != null)
         {
             ShowKeyboard.ActiveInputField = emailInput;
-
             emailInput.Select();
             emailInput.ActivateInputField();
         }
 
-        // Reset the MRTK keyboard instance safely
         if (NonNativeKeyboard.Instance != null)
         {
             NonNativeKeyboard.Instance.Close();
@@ -168,5 +159,4 @@ public class FirebaseLoginManager : MonoBehaviour
             }
         }
     }
-    
 }
