@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/TutorialInfo/Scenes/Login.unity
+    path: Assets/Scenes/Login.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/TutorialInfo/Scenes/MainScene.unity
+    path: Assets/Scenes/MainScene.unity
     guid: d134f8ce9e84942a7adb14ca565d3c3f
   - enabled: 0
     path: Assets/TirgamesAssets/PolyWorld/Scenes/PolyVilla-Day.unity
