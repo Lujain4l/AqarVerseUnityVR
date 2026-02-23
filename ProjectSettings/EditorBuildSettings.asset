@@ -8,13 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Login.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: d134f8ce9e84942a7adb14ca565d3c3f
   - enabled: 0
     path: Assets/TirgamesAssets/PolyWorld/Scenes/PolyVilla-Day.unity
     guid: 7e9e9bea798af86448d47e2a01ff28a5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Studio Apartment 2/Apartment Scene.unity
     guid: 0ceb1e501fb03304fb244a59fd86a708
   m_configObjects:

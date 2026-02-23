@@ -24,7 +24,6 @@ Library: C:\Users\danab\Documents\AqarVerseUnityVR\Temp\BurstOutput\tempburstlib
 --assembly-defines=Unity.InputSystem;
 --assembly-defines=Unity.InputSystem.ForUI;
 --assembly-defines=Unity.Mathematics;
---assembly-defines=Unity.Postprocessing.Runtime;
 --assembly-defines=Unity.RenderPipeline.Universal.ShaderLibrary;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
 --assembly-defines=Unity.RenderPipelines.Universal.Runtime;
@@ -67,7 +66,6 @@ Library: C:\Users\danab\Documents\AqarVerseUnityVR\Temp\BurstOutput\tempburstlib
 --assembly-defines=Unity.InputSystem;
 --assembly-defines=Unity.InputSystem.ForUI;
 --assembly-defines=Unity.Mathematics;
---assembly-defines=Unity.Postprocessing.Runtime;
 --assembly-defines=Unity.RenderPipeline.Universal.ShaderLibrary;
 --assembly-defines=Unity.RenderPipelines.Core.Runtime;
 --assembly-defines=Unity.RenderPipelines.Universal.Runtime;
