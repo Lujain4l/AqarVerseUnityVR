@@ -7,9 +7,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Attach to a GameObject in the Login scene.
+/// Initializes Firebase, handles sign-in, and persists across scenes via DontDestroyOnLoad.
+///
+/// NOTE: Delete FirebaseInit.cs — this script already handles Firebase initialization.
+///       Having two scripts call CheckAndFixDependenciesAsync() is redundant.
+/// </summary>
 public class FirebaseLoginManager : MonoBehaviour
 {
-    public static FirebaseLoginManager Instance;
+    // ─────────────────────────────────────────────
+    // Singleton
+    // ─────────────────────────────────────────────
+
+    public static FirebaseLoginManager Instance { get; private set; }
+
+    // ─────────────────────────────────────────────
+    // Inspector Fields
+    // ─────────────────────────────────────────────
 
     [Header("UI References")]
     public TMP_InputField emailInput;
@@ -20,12 +35,33 @@ public class FirebaseLoginManager : MonoBehaviour
     [Header("Scene Settings")]
     public string nextSceneName = "MainScene";
 
+    // ─────────────────────────────────────────────
+    // Public State (readable from other scripts)
+    // ─────────────────────────────────────────────
+
+    /// <summary>True once Firebase SDK is ready.</summary>
+    public bool IsFirebaseReady { get; private set; } = false;
+
+    /// <summary>
+    /// The currently signed-in Firebase user.
+    /// Prefer FirebaseAuth.DefaultInstance.CurrentUser directly in other scripts —
+    /// this is provided as a convenience accessor.
+    /// </summary>
+    public FirebaseUser CurrentUser => auth?.CurrentUser;
+
+    // ─────────────────────────────────────────────
+    // Private
+    // ─────────────────────────────────────────────
+
     private FirebaseAuth auth;
-    private bool firebaseReady = false;
+
+    // ─────────────────────────────────────────────
+    // Unity Lifecycle
+    // ─────────────────────────────────────────────
 
     private async void Awake()
     {
-        // Singleton pattern to persist across scenes
+        // ── Singleton with scene persistence ──
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -35,73 +71,73 @@ public class FirebaseLoginManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (statusText != null)
-            statusText.text = "Checking Firebase...";
-
+        SetStatus("Checking Firebase...");
         await InitFirebase();
     }
+
+    // ─────────────────────────────────────────────
+    // Firebase Initialization (single location)
+    // ─────────────────────────────────────────────
 
     private async Task InitFirebase()
     {
         try
         {
-            var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
+            DependencyStatus dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
 
             if (dependencyStatus == DependencyStatus.Available)
             {
                 auth = FirebaseAuth.DefaultInstance;
-                firebaseReady = true;
-                if (statusText != null)
-                    statusText.text = "";
-                Debug.Log("Firebase Ready!");
+                IsFirebaseReady = true;
+                SetStatus("");
+                Debug.Log("[FirebaseLoginManager] Firebase is ready.");
             }
             else
             {
-                firebaseReady = false;
-                string msg = "Firebase not ready. Check google-services.json & Android setup.";
-                if (statusText != null)
-                    statusText.text = msg;
-                Debug.LogError(msg);
+                IsFirebaseReady = false;
+                string msg = $"Firebase dependencies not resolved: {dependencyStatus}. " +
+                              "Check google-services.json and Android setup.";
+                SetStatus(msg);
+                Debug.LogError($"[FirebaseLoginManager] {msg}");
             }
         }
         catch (Exception ex)
         {
-            firebaseReady = false;
-            if (statusText != null)
-                statusText.text = "Firebase init exception:\n" + ex.Message;
-            Debug.LogError("Firebase Init Exception: " + ex);
+            IsFirebaseReady = false;
+            SetStatus("Firebase init error:\n" + ex.Message);
+            Debug.LogError($"[FirebaseLoginManager] Init exception: {ex}");
         }
     }
 
+    // ─────────────────────────────────────────────
+    // Login
+    // ─────────────────────────────────────────────
+
     public async void OnLoginButtonPressed()
     {
-        if (!firebaseReady)
+        if (!IsFirebaseReady)
         {
-            if (statusText != null)
-                statusText.text = "Firebase not ready yet. Please wait...";
+            SetStatus("Firebase not ready yet. Please wait...");
             return;
         }
 
-        string email = emailInput != null ? emailInput.text.Trim() : string.Empty;
-        string password = passwordInput != null ? passwordInput.text : string.Empty;
+        string email    = emailInput    != null ? emailInput.text.Trim() : string.Empty;
+        string password = passwordInput != null ? passwordInput.text     : string.Empty;
 
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            if (statusText != null)
-                statusText.text = "Please fill in email and password.";
+            SetStatus("Please fill in email and password.");
             return;
         }
 
-        if (statusText != null)
-            statusText.text = "Logging in...";
+        SetStatus("Logging in...");
 
         try
         {
-            var userCredential = await auth.SignInWithEmailAndPasswordAsync(email, password);
-            FirebaseUser user = userCredential.User;
+            AuthResult result = await auth.SignInWithEmailAndPasswordAsync(email, password);
+            Debug.Log($"[FirebaseLoginManager] Signed in: {result.User.UserId} ({result.User.Email})");
 
-            if (statusText != null)
-                statusText.text = "";
+            SetStatus("");
 
             if (!string.IsNullOrEmpty(nextSceneName))
             {
@@ -126,20 +162,26 @@ public class FirebaseLoginManager : MonoBehaviour
             else if (msg.ToLower().Contains("network"))
                 displayMessage = "Network error. Check your internet connection.";
 
-            if (statusText != null)
-                statusText.text = displayMessage;
-
+            Debug.LogError($"[FirebaseLoginManager] Login failed: {ex.Message}");
+            SetStatus(displayMessage);
             ResetLoginUI();
         }
     }
 
+    // ─────────────────────────────────────────────
+    // Helpers
+    // ─────────────────────────────────────────────
+
+    private void SetStatus(string message)
+    {
+        if (statusText != null)
+            statusText.text = message;
+    }
+
     private void ResetLoginUI()
     {
-        if (emailInput != null)
-            emailInput.text = "";
-
-        if (passwordInput != null)
-            passwordInput.text = "";
+        if (emailInput != null)    emailInput.text    = "";
+        if (passwordInput != null) passwordInput.text = "";
 
         if (emailInput != null)
         {
