@@ -1,313 +1,474 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Firebase;
 using Firebase.Auth;
 using Firebase.Firestore;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Attach to a GameObject in MainScene.
-/// Handles: loading property description from Firestore + saving/removing favorites.
-/// </summary>
-public class PropertyManager : MonoBehaviour
+public class PropertySignManager : MonoBehaviour
 {
-    // ─────────────────────────────────────────────
-    // Inspector Fields
-    // ─────────────────────────────────────────────
-
     [Header("Property Settings")]
-    [Tooltip("Paste the Firestore document ID of the property you want to display.")]
     public string propertyId = "YOUR_PROPERTY_ID_HERE";
 
-    [Header("UI References")]
-    [Tooltip("Drag the TMP text component that shows the property description.")]
-    public TextMeshProUGUI descriptionText;
+    [Header("Info Text Fields")]
+    public TextMeshProUGUI locationText;
+    public TextMeshProUGUI sizeText;
+    public TextMeshProUGUI priceText;
+    public TextMeshProUGUI ownerText;
+    public TextMeshProUGUI typeText;
 
-    [Tooltip("Drag the Favorite button here.")]
-    public Button favoriteButton;
+    [Header("Room Counts")]
+    public TextMeshProUGUI bedroomText;
+    public TextMeshProUGUI bathroomText;
+    public TextMeshProUGUI kitchenText;
 
-    [Tooltip("(Optional) Text label on the Favorite button to toggle its display.")]
-    public TextMeshProUGUI favoriteButtonLabel;
+    [Header("Favorite Button")]
+    public Button actionButton;
 
-    // ─────────────────────────────────────────────
-    // Private State
-    // ─────────────────────────────────────────────
+    [Tooltip("The UI Image that should change when favorite is toggled")]
+    public Image favoriteImage;
+
+    [Tooltip("Image shown when property is NOT favorited")]
+    public Sprite notFavoritedSprite;
+
+    [Tooltip("Image shown when property IS favorited")]
+    public Sprite favoritedSprite;
+
+    [Header("Debug")]
+    public TextMeshProUGUI debugText;
 
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
+
     private bool isFavorited = false;
+    private bool isBusy = false;
+
     private string cachedTitle = "";
     private string cachedDescription = "";
 
-    // ─────────────────────────────────────────────
-    // Unity Lifecycle
-    // ─────────────────────────────────────────────
-
     private async void Start()
     {
-        // ── 1. Get the current authenticated user ──
+        Log("[SignManager] Start");
+
+        DependencyStatus status = await FirebaseApp.CheckAndFixDependenciesAsync();
+        if (status != DependencyStatus.Available)
+        {
+            Log("[SignManager] Firebase not ready: " + status);
+            return;
+        }
+
+        db = FirebaseFirestore.DefaultInstance;
         currentUser = FirebaseAuth.DefaultInstance.CurrentUser;
 
         if (currentUser == null)
         {
-            Debug.LogError("[PropertyManager] No authenticated user found. " +
-                           "Make sure FirebaseLoginManager authenticated before loading MainScene.");
-            SetDescriptionText("Error: User not logged in.");
+            Log("[SignManager] ERROR: No logged-in user found.");
             return;
         }
 
-        Log($"[PropertyManager] Current user UID: {currentUser.UserId}");
+        Log("[SignManager] Current user id: " + currentUser.UserId);
 
-        // ── 2. Validate propertyId ──
-        if (string.IsNullOrEmpty(propertyId) || propertyId == "YOUR_PROPERTY_ID_HERE")
+        if (string.IsNullOrWhiteSpace(propertyId) || propertyId == "YOUR_PROPERTY_ID_HERE")
         {
-            Debug.LogError("[PropertyManager] propertyId is not set in the Inspector.");
-            SetDescriptionText("Error: No property ID assigned.");
+            Log("[SignManager] ERROR: propertyId is not assigned.");
             return;
         }
 
-        // ── 3. Get Firestore instance ──
-        db = FirebaseFirestore.DefaultInstance;
-
-        if (db == null)
+        if (actionButton != null)
         {
-            Debug.LogError("[PropertyManager] FirebaseFirestore.DefaultInstance is null. " +
-                           "Ensure Firebase was initialized in the Login scene.");
-            return;
-        }
-
-        // ── 4. Wire the Favorite button ──
-        if (favoriteButton != null)
-        {
-            favoriteButton.onClick.AddListener(OnFavoriteButtonClicked);
+            actionButton.onClick.RemoveAllListeners();
+            actionButton.onClick.AddListener(OnActionButtonClicked);
+            Log("[SignManager] Button listener attached.");
         }
         else
         {
-            Debug.LogWarning("[PropertyManager] Favorite button is not assigned in the Inspector.");
+            Log("[SignManager] WARNING: actionButton is not assigned.");
         }
 
-        // ── 5. Load data ──
-        await LoadPropertyDescription();
+        await LoadPropertyData();
         await CheckIfAlreadyFavorited();
+        UpdateFavoriteVisual();
     }
 
-    // ─────────────────────────────────────────────
-    // Feature 1 — Load Property Description
-    // ─────────────────────────────────────────────
-
-    private async Task LoadPropertyDescription()
+    public async void OnActionButtonClicked()
     {
-        Log($"[PropertyManager] Fetching property: Property/{propertyId}");
+        if (isBusy)
+        {
+            Log("[SignManager] Button click ignored: operation already running.");
+            return;
+        }
+
+        if (currentUser == null || db == null)
+        {
+            Log("[SignManager] Button click ignored: Firebase or user not ready.");
+            return;
+        }
+
+        isBusy = true;
+
+        if (actionButton != null)
+            actionButton.interactable = false;
 
         try
         {
-            DocumentReference docRef = db.Collection("Property").Document(propertyId);
-            DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
-
-            if (!snapshot.Exists)
+            if (!isFavorited)
             {
-                Debug.LogWarning($"[PropertyManager] No document found at Property/{propertyId}");
-                SetDescriptionText("Property not found.");
-                return;
-            }
-
-            // Pull description
-            if (snapshot.TryGetValue("description", out string description))
-            {
-                cachedDescription = description;
-                SetDescriptionText(description);
-                Log($"[PropertyManager] Description loaded: {description}");
+                await SaveFavorite();
             }
             else
             {
-                Debug.LogWarning("[PropertyManager] Field 'description' not found in document.");
-                SetDescriptionText("No description available.");
+                await RemoveFavorite();
             }
 
-            // Cache title for use in the favorite document (optional but useful)
-            if (snapshot.TryGetValue("title", out string title))
-            {
-                cachedTitle = title;
-                Log($"[PropertyManager] Title cached: {title}");
-            }
+            UpdateFavoriteVisual();
         }
         catch (Exception ex)
         {
-            Debug.LogError($"[PropertyManager] Failed to load property description: {ex.Message}");
-            SetDescriptionText("Failed to load property.");
+            Log("[SignManager] Button action failed: " + ex.Message);
+        }
+        finally
+        {
+            if (actionButton != null)
+                actionButton.interactable = true;
+
+            isBusy = false;
         }
     }
 
-    // ─────────────────────────────────────────────
-    // Feature 2 — Favorites
-    // ─────────────────────────────────────────────
-
-    /// <summary>
-    /// Check on scene load whether this property is already in the user's favorites.
-    /// Updates the button label accordingly.
-    /// </summary>
-    private async Task CheckIfAlreadyFavorited()
+    private void UpdateFavoriteVisual()
     {
-        if (currentUser == null || db == null) return;
+        if (favoriteImage == null)
+        {
+            Log("[SignManager] WARNING: favoriteImage is not assigned.");
+            return;
+        }
+
+        if (isFavorited)
+        {
+            if (favoritedSprite != null)
+                favoriteImage.sprite = favoritedSprite;
+
+            Log("[SignManager] Favorite visual -> favorited");
+        }
+        else
+        {
+            if (notFavoritedSprite != null)
+                favoriteImage.sprite = notFavoritedSprite;
+
+            Log("[SignManager] Favorite visual -> not favorited");
+        }
+    }
+
+    private async Task LoadPropertyData()
+    {
+        Log("[SignManager] Loading Property/" + propertyId);
 
         try
         {
-            DocumentReference favRef = db
-                .Collection("Customer")
-                .Document(currentUser.UserId)
-                .Collection("favorites")
-                .Document(propertyId);
+            DocumentSnapshot snap = await db.Collection("Property")
+                                            .Document(propertyId)
+                                            .GetSnapshotAsync();
 
-            DocumentSnapshot snapshot = await favRef.GetSnapshotAsync();
-            isFavorited = snapshot.Exists;
+            if (!snap.Exists)
+            {
+                Log("[SignManager] Property document not found.");
+                return;
+            }
 
-            Log($"[PropertyManager] Is favorited: {isFavorited}");
-            UpdateFavoriteButtonLabel();
+            string title = "";
+            string description = "";
+            string city = "";
+            string neighborhood = "";
+            string ownerUid = "";
+            string propertyType = "";
+
+            snap.TryGetValue("title", out title);
+            snap.TryGetValue("description", out description);
+            snap.TryGetValue("city", out city);
+            snap.TryGetValue("neighborhood", out neighborhood);
+            snap.TryGetValue("ownerUid", out ownerUid);
+            snap.TryGetValue("type", out propertyType);
+
+            cachedTitle = title ?? "";
+            cachedDescription = description ?? "";
+
+            string sizeDisplay = GetDisplayValue(snap, "size", "m²");
+            string priceDisplay = GetDisplayValue(snap, "price", "SAR");
+            string ownerName = await ResolveOwnerName(ownerUid);
+
+            if (bedroomText != null)
+                bedroomText.text = ExtractNumber(cachedDescription, "bedroom");
+
+            if (bathroomText != null)
+                bathroomText.text = ExtractNumber(cachedDescription, "bathroom");
+
+            if (kitchenText != null)
+                kitchenText.text = ExtractNumber(cachedDescription, "kitchen");
+
+            if (locationText != null)
+                locationText.text = BuildLocation(city, neighborhood);
+
+            if (sizeText != null)
+                sizeText.text = sizeDisplay;
+
+            if (priceText != null)
+                priceText.text = priceDisplay;
+
+            if (ownerText != null)
+                ownerText.text = ownerName;
+
+            if (typeText != null)
+                typeText.text = string.IsNullOrWhiteSpace(propertyType) ? "Unknown" : propertyType;
+
+            Log("[SignManager] Loaded property successfully. Title: " + cachedTitle);
+            Log("[SignManager] Owner resolved to: " + ownerName);
+            Log("[SignManager] Property type: " + propertyType);
         }
         catch (Exception ex)
         {
-            Debug.LogError($"[PropertyManager] Failed to check favorite status: {ex.Message}");
+            Log("[SignManager] LoadPropertyData error: " + ex.Message);
         }
     }
 
-    /// <summary>
-    /// Called when the user clicks the Favorite button.
-    /// Toggles between saving and removing the favorite.
-    /// </summary>
-    public async void OnFavoriteButtonClicked()
-{
-    // Guard: ignore if this manager is already processing
-    if (currentUser == null)
+    private string GetDisplayValue(DocumentSnapshot snap, string fieldName, string suffix)
     {
-        Debug.LogError("[PropertyManager] Cannot save favorite — no authenticated user.");
-        return;
-    }
-
-    if (string.IsNullOrEmpty(propertyId))
-    {
-        Debug.LogError("[PropertyManager] Cannot save favorite — propertyId is empty.");
-        return;
-    }
-
-    // Disable ONLY this manager's button during async operation
-    if (favoriteButton != null) favoriteButton.interactable = false;
-
-    Log($"[PropertyManager] Button clicked for propertyId: {propertyId}, isFavorited: {isFavorited}");
-
-    if (isFavorited)
-        await RemoveFavorite();
-    else
-        await SaveFavorite();
-
-    if (favoriteButton != null) favoriteButton.interactable = true;
-}
-
-    /// <summary>
-    /// Writes the favorite document to:
-    /// Customer/{uid}/favorites/{propertyId}
-    /// </summary>
-   private async Task SaveFavorite()
-{
-    // Double-check state hasn't changed from another manager
-    if (isFavorited)
-    {
-        Log("[PropertyManager] Already favorited, skipping save.");
-        return;
-    }
-
-    Log($"[PropertyManager] Saving favorite: Customer/{currentUser.UserId}/favorites/{propertyId}");
-
-    try
-    {
-        DocumentReference favRef = db
-            .Collection("Customer")
-            .Document(currentUser.UserId)
-            .Collection("favorites")
-            .Document(propertyId);
-
-        Dictionary<string, object> favoriteData = new Dictionary<string, object>
+        long longValue;
+        if (snap.TryGetValue(fieldName, out longValue))
         {
-            { "propertyId",   propertyId },
-            { "savedAt",      FieldValue.ServerTimestamp },
-            { "title",        cachedTitle },
-            { "description",  cachedDescription },
-            { "customerUid",  currentUser.UserId }
-        };
+            if (fieldName == "price")
+                return string.Format("{0:N0} {1}", longValue, suffix);
 
-        await favRef.SetAsync(favoriteData);
+            return longValue + " " + suffix;
+        }
 
-        isFavorited = true;
-        UpdateFavoriteButtonLabel();
-        Log("[PropertyManager] Favorite saved successfully.");
+        double doubleValue;
+        if (snap.TryGetValue(fieldName, out doubleValue))
+        {
+            if (fieldName == "price")
+                return string.Format("{0:N0} {1}", doubleValue, suffix);
+
+            return doubleValue + " " + suffix;
+        }
+
+        string stringValue;
+        if (snap.TryGetValue(fieldName, out stringValue))
+            return stringValue ?? "";
+
+        return "";
     }
-    catch (Exception ex)
+
+    private async Task<string> ResolveOwnerName(string ownerUid)
     {
-        Log($"[PropertyManager] Failed to save favorite: {ex.Message}");
-    }
-}
+        if (string.IsNullOrWhiteSpace(ownerUid))
+            return "Unknown";
 
-private async Task RemoveFavorite()
-{
-    // Double-check state hasn't changed from another manager
-    if (!isFavorited)
+        try
+        {
+            Log("[SignManager] Trying company/" + ownerUid);
+
+            DocumentSnapshot companySnap = await db.Collection("company")
+                                                   .Document(ownerUid)
+                                                   .GetSnapshotAsync();
+
+            if (companySnap.Exists)
+            {
+                string companyName;
+                if (companySnap.TryGetValue("companyName", out companyName) &&
+                    !string.IsNullOrWhiteSpace(companyName))
+                    return companyName;
+
+                string fallbackName;
+                if (companySnap.TryGetValue("name", out fallbackName) &&
+                    !string.IsNullOrWhiteSpace(fallbackName))
+                    return fallbackName;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log("[SignManager] Company doc lookup failed: " + ex.Message);
+        }
+
+        try
+        {
+            Log("[SignManager] Trying company query uid=" + ownerUid);
+
+            QuerySnapshot companyQuery = await db.Collection("company")
+                                                 .WhereEqualTo("uid", ownerUid)
+                                                 .Limit(1)
+                                                 .GetSnapshotAsync();
+
+            foreach (DocumentSnapshot companyDoc in companyQuery.Documents)
+            {
+                string companyName;
+                if (companyDoc.TryGetValue("companyName", out companyName) &&
+                    !string.IsNullOrWhiteSpace(companyName))
+                    return companyName;
+
+                string fallbackName;
+                if (companyDoc.TryGetValue("name", out fallbackName) &&
+                    !string.IsNullOrWhiteSpace(fallbackName))
+                    return fallbackName;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log("[SignManager] Company query lookup failed: " + ex.Message);
+        }
+
+        try
+        {
+            Log("[SignManager] Trying Customer/" + ownerUid);
+
+            DocumentSnapshot customerSnap = await db.Collection("Customer")
+                                                    .Document(ownerUid)
+                                                    .GetSnapshotAsync();
+
+            if (customerSnap.Exists)
+            {
+                string displayName;
+                if (customerSnap.TryGetValue("displayName", out displayName) &&
+                    !string.IsNullOrWhiteSpace(displayName))
+                        return displayName;
+
+                string customerName;
+                if (customerSnap.TryGetValue("name", out customerName) &&
+                    !string.IsNullOrWhiteSpace(customerName))
+                        return customerName;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log("[SignManager] Customer lookup failed: " + ex.Message);
+        }
+
+        return "Unknown";
+    }
+
+    private async Task CheckIfAlreadyFavorited()
     {
-        Log("[PropertyManager] Already not favorited, skipping remove.");
-        return;
+        try
+        {
+            DocumentSnapshot snap = await db.Collection("Customer")
+                                            .Document(currentUser.UserId)
+                                            .Collection("favorites")
+                                            .Document(propertyId)
+                                            .GetSnapshotAsync();
+
+            isFavorited = snap.Exists;
+            Log("[SignManager] Is favorited: " + isFavorited);
+        }
+        catch (Exception ex)
+        {
+            Log("[SignManager] CheckIfAlreadyFavorited error: " + ex.Message);
+        }
     }
 
-    Log($"[PropertyManager] Removing favorite: Customer/{currentUser.UserId}/favorites/{propertyId}");
-
-    try
+    private async Task SaveFavorite()
     {
-        DocumentReference favRef = db
-            .Collection("Customer")
-            .Document(currentUser.UserId)
-            .Collection("favorites")
-            .Document(propertyId);
+        if (isFavorited)
+        {
+            Log("[SignManager] Property already favorited.");
+            return;
+        }
 
-        await favRef.DeleteAsync();
+        try
+        {
+            Dictionary<string, object> favoriteData = new Dictionary<string, object>();
+            favoriteData["propertyId"] = propertyId;
+            favoriteData["savedAt"] = FieldValue.ServerTimestamp;
+            favoriteData["title"] = cachedTitle;
+            favoriteData["description"] = cachedDescription;
+            favoriteData["customerUid"] = currentUser.UserId;
 
-        isFavorited = false;
-        UpdateFavoriteButtonLabel();
-        Log("[PropertyManager] Favorite removed successfully.");
+            await db.Collection("Customer")
+                    .Document(currentUser.UserId)
+                    .Collection("favorites")
+                    .Document(propertyId)
+                    .SetAsync(favoriteData);
+
+            isFavorited = true;
+            Log("[SignManager] Favorite saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Log("[SignManager] SaveFavorite error: " + ex.Message);
+            throw;
+        }
     }
-    catch (Exception ex)
+
+    private async Task RemoveFavorite()
     {
-        Log($"[PropertyManager] Failed to remove favorite: {ex.Message}");
+        if (!isFavorited)
+        {
+            Log("[SignManager] Property is not currently favorited.");
+            return;
+        }
+
+        try
+        {
+            await db.Collection("Customer")
+                    .Document(currentUser.UserId)
+                    .Collection("favorites")
+                    .Document(propertyId)
+                    .DeleteAsync();
+
+            isFavorited = false;
+            Log("[SignManager] Favorite removed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Log("[SignManager] RemoveFavorite error: " + ex.Message);
+            throw;
+        }
     }
-}
 
-    // ─────────────────────────────────────────────
-    // Helpers
-    // ─────────────────────────────────────────────
-
-    private void SetDescriptionText(string text)
+    private string ExtractNumber(string text, string keyword)
     {
-        if (descriptionText != null)
-            descriptionText.text = text;
-        else
-            Debug.LogWarning("[PropertyManager] descriptionText TMP component is not assigned.");
+        if (string.IsNullOrWhiteSpace(text))
+            return "?";
+
+        string lower = text.ToLower();
+        string key = keyword.ToLower();
+
+        int keyIndex = lower.IndexOf(key);
+        if (keyIndex < 0)
+            return "?";
+
+        string before = lower.Substring(0, keyIndex).TrimEnd();
+        string[] parts = before.Split(' ');
+
+        for (int i = parts.Length - 1; i >= 0; i--)
+        {
+            int num;
+            if (int.TryParse(parts[i], out num))
+                return num.ToString();
+        }
+
+        return "?";
     }
 
-  [Header("Heart Button Visual")]
-public Image heartImage;
-public Color favoritedColor   = new Color(1f, 0.15f, 0.15f, 1f);   // red
-public Color unfavoritedColor = new Color(0.96f, 0.72f, 0f, 1f);   // yellow
+    private string BuildLocation(string city, string neighborhood)
+    {
+        if (!string.IsNullOrWhiteSpace(city) && !string.IsNullOrWhiteSpace(neighborhood))
+            return city + " - " + neighborhood;
 
-private void UpdateFavoriteButtonLabel()
-{
-    if (heartImage != null)
-        heartImage.color = isFavorited ? favoritedColor : unfavoritedColor;
-}
-[Header("Debug (optional)")]
-public TextMeshProUGUI debugText; // drag any TMP text here, or leave empty
+        if (!string.IsNullOrWhiteSpace(city))
+            return city;
 
-private void Log(string message)
-{
-    Debug.Log(message);
-    if (debugText != null)
-        debugText.text += "\n" + message;
-}
+        if (!string.IsNullOrWhiteSpace(neighborhood))
+            return neighborhood;
+
+        return "";
+    }
+
+    private void Log(string message)
+    {
+        Debug.Log(message);
+
+        if (debugText != null)
+            debugText.text += "\n" + message;
+    }
 }
