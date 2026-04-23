@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "569603954223",
+    "project_id": "aqarverse-66eb3",
+    "storage_bucket": "aqarverse-66eb3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569603954223:android:ab17e182ff55f7ff9dd8da",
+        "android_client_info": {
+          "package_name": "com.AqarVerse.VRproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8M1JzWp2VkUmPR4jndRZD_1bEr3I65XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
