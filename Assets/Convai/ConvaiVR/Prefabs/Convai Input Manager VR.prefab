@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &626175274057988356
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298942066626623780, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783642062505694466, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: m_Name
+      value: Convai Input Manager VR
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: TextSendKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: PlayerRunKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _textSendKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: CursorLockKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: PlayerJumpKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _playerRunKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _cursorLockKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _playerJumpKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _talkKeyAction.m_SingletonActionBindings.Array.data[0].m_Id
+      value: d6a5974e-369f-47e8-93e6-1fd4a52a1d0a
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: PlayerMovementKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: TalkKeyAction.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRController>{RightHand}/primaryButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _playerMovementKeyAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _talkKeyAction.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRController>{RightHand}/primaryButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _settingsKeyAction.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 8dfbd94e-b9f3-40bc-9458-0c430ebac89b
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: SettingsKeyAction.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRController>{LeftHand}/primaryButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717556402746858790, guid: 451807eb9a060584ea0c4d67c5d20cb9,
+        type: 3}
+      propertyPath: _settingsKeyAction.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRController>{LeftHand}/primaryButton
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 451807eb9a060584ea0c4d67c5d20cb9, type: 3}

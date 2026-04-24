@@ -6,22 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Login.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Scenes/MainScene.unity
-    guid: d134f8ce9e84942a7adb14ca565d3c3f
-  - enabled: 0
-    path: Assets/TirgamesAssets/PolyWorld/Scenes/PolyVilla-Day.unity
-    guid: 7e9e9bea798af86448d47e2a01ff28a5
-  - enabled: 0
-    path: Assets/Studio Apartment 2/Apartment Scene.unity
-    guid: 0ceb1e501fb03304fb244a59fd86a708
-  - enabled: 1
-    path: Assets/Blue Dot Studios/Modern Neighborhood House/Scenes/MNH_Day.unity
-    guid: 85a6b635a079a124db1a50ebe9670ce0
+    path: Assets/Convai/Scenes/Convai Demo - VR.unity
+    guid: eda28d2f4fd11e84893a8d05344d7424
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 32808625dbcd7664590a6561e4c289c3,
       type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: b9889eb2e3b4c8b4f9f0083b6bd6ee43,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7a7970b4603a5a94e829affc5f0c9008,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 9cfb797f7b487ed48bc018b3aa66b3cd,
       type: 2}
