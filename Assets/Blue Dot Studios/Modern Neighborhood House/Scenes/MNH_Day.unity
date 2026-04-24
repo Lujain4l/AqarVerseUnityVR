@@ -75793,6 +75793,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bowl_M (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8352805460460993913, guid: ebf17ce93ae39ba44b67e56d98ed0358,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8692212139479803843, guid: ebf17ce93ae39ba44b67e56d98ed0358,
         type: 3}
       propertyPath: m_RootOrder
@@ -85885,6 +85890,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bowl_M
       objectReference: {fileID: 0}
+    - target: {fileID: 8352805460460993913, guid: ebf17ce93ae39ba44b67e56d98ed0358,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8692212139479803843, guid: ebf17ce93ae39ba44b67e56d98ed0358,
         type: 3}
       propertyPath: m_RootOrder
@@ -87283,6 +87293,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1149389109}
     m_Modifications:
+    - target: {fileID: 1083853995297773780, guid: 2efcb5c40eb8239429f11852e41b50cb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1970321966859715890, guid: 2efcb5c40eb8239429f11852e41b50cb,
         type: 3}
       propertyPath: m_RootOrder
@@ -88855,6 +88870,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Book_01
       objectReference: {fileID: 0}
+    - target: {fileID: 6927581838542320628, guid: 14fd4d56c5882f54ba9a11dc79b9a525,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7739548483290622286, guid: 14fd4d56c5882f54ba9a11dc79b9a525,
         type: 3}
       propertyPath: m_RootOrder
@@ -90021,6 +90041,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Plant_Pot_09
+      objectReference: {fileID: 0}
+    - target: {fileID: 8121999119422494370, guid: b4364dfb21a9f064896abe07e8136fe0,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8934283518209870872, guid: b4364dfb21a9f064896abe07e8136fe0,
         type: 3}
@@ -92829,6 +92854,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Book_05
       objectReference: {fileID: 0}
+    - target: {fileID: 1775486784293001534, guid: bdf74687ee7040a479eef9cd241f3da0,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -93301,6 +93331,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Book_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 1608554876785715162, guid: 497612fa16783c044b1e2fa1b6b4e423,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2096826466346515808, guid: 497612fa16783c044b1e2fa1b6b4e423,
         type: 3}
@@ -95350,6 +95385,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Book_02
       objectReference: {fileID: 0}
+    - target: {fileID: 8542223827020580298, guid: ddd8fdc14924f2d4591fb77e7fe5fc14,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9063428156907642736, guid: ddd8fdc14924f2d4591fb77e7fe5fc14,
         type: 3}
       propertyPath: m_RootOrder
@@ -96195,6 +96235,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 111300000, guid: 0e4d8fc7caf18214a813a277c473abe7,
         type: 2}
+    - target: {fileID: 861349790050057595, guid: 02253eeb2de32a2438d69a19c4bf6a70,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 938514410615353826, guid: 02253eeb2de32a2438d69a19c4bf6a70,
         type: 3}
       propertyPath: m_Name
@@ -96864,6 +96909,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bowl_S
       objectReference: {fileID: 0}
+    - target: {fileID: 3899756350705138055, guid: 39d7294b111fe864fb230a61f2cd3e3f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4419551934745813821, guid: 39d7294b111fe864fb230a61f2cd3e3f,
         type: 3}
       propertyPath: m_RootOrder
@@ -97180,6 +97230,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bowl_L
+      objectReference: {fileID: 0}
+    - target: {fileID: 8364598673894227566, guid: 223edac736ad5414093e0724bc628c48,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9178008943331075284, guid: 223edac736ad5414093e0724bc628c48,
         type: 3}
@@ -97519,6 +97574,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tea_Pot
+      objectReference: {fileID: 0}
+    - target: {fileID: 2527861229474055780, guid: e807a0c94aaea6e4a9e8b7d798651395,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2909066740962483422, guid: e807a0c94aaea6e4a9e8b7d798651395,
         type: 3}
@@ -98014,6 +98074,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1478762749}
     m_Modifications:
+    - target: {fileID: 6541800851012192081, guid: 7334fc80b8f974845a528ba835154a77,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926866571600639933, guid: 7334fc80b8f974845a528ba835154a77,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7892214619872483677, guid: 7334fc80b8f974845a528ba835154a77,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8254844359014683995, guid: 7334fc80b8f974845a528ba835154a77,
         type: 3}
       propertyPath: m_RootOrder
@@ -98073,6 +98148,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Childroom_Pillows
+      objectReference: {fileID: 0}
+    - target: {fileID: 8993008600777171016, guid: 7334fc80b8f974845a528ba835154a77,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -99752,6 +99832,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bowl_XL
+      objectReference: {fileID: 0}
+    - target: {fileID: 7855194032829572160, guid: fac9a2f54f5303846aaaf86ccfccee43,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
