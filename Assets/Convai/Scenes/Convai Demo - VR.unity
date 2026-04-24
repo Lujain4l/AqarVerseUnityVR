@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18373783, g: 0.22913599, b: 0.30466178, a: 1}
+  m_IndirectSpecularColor: {r: 0.18373747, g: 0.22913533, b: 0.3046605, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -468,6 +468,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1892372227929089525, guid: a04b717be9a61254c86fbd5538589c18,
+        type: 3}
+      propertyPath: characters.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1892372227929089525, guid: a04b717be9a61254c86fbd5538589c18,
+        type: 3}
+      propertyPath: characters.Array.data[0].characterName
+      value: Amelia
+      objectReference: {fileID: 0}
+    - target: {fileID: 1892372227929089525, guid: a04b717be9a61254c86fbd5538589c18,
+        type: 3}
+      propertyPath: characters.Array.data[0].characterGameObject
+      value: 
+      objectReference: {fileID: 304335919655775251}
+    - target: {fileID: 1892372227929089525, guid: a04b717be9a61254c86fbd5538589c18,
+        type: 3}
+      propertyPath: characters.Array.data[0].characterTextColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1892372227929089525, guid: a04b717be9a61254c86fbd5538589c18,
+        type: 3}
+      propertyPath: characters.Array.data[0].characterTextColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2482879748349040769, guid: a04b717be9a61254c86fbd5538589c18,
         type: 3}
       propertyPath: characterID
@@ -522,6 +547,16 @@ PrefabInstance:
         type: 3}
       propertyPath: _playerMovementKeyAction.m_SingletonActionBindings.Array.data[4].m_Path
       value: <Keyboard>/rightArrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402891701032687287, guid: a04b717be9a61254c86fbd5538589c18,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.067
+      objectReference: {fileID: 0}
+    - target: {fileID: 3402891701032687287, guid: a04b717be9a61254c86fbd5538589c18,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.014
       objectReference: {fileID: 0}
     - target: {fileID: 4056144950106497200, guid: a04b717be9a61254c86fbd5538589c18,
         type: 3}
@@ -583,6 +618,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a04b717be9a61254c86fbd5538589c18, type: 3}
+--- !u!114 &304335919655775251 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2482879748349040769, guid: a04b717be9a61254c86fbd5538589c18,
+    type: 3}
+  m_PrefabInstance: {fileID: 304335919655775250}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b38e4bc919e1f040ba78aea7472893e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
