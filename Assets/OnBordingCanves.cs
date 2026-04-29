@@ -3,28 +3,37 @@ using UnityEngine.XR;
 
 public class OnBordingCanves : MonoBehaviour
 {
-    [SerializeField] private GameObject[] canvases; // أكثر من كانفاس
+    [SerializeField] private GameObject[] canvases;
 
+    private InputDevice rightHand;
     private bool isHidden = false;
-    private bool wasPressed = false;
+
+    void Start()
+    {
+        rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+    }
 
     void Update()
     {
-        InputDevice rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        if (!rightHand.isValid)
+            rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 
-        if (rightHand.TryGetFeatureValue(CommonUsages.primaryButton, out bool isPressed))
+        bool primary = false;   // A
+        bool secondary = false; // B
+
+        rightHand.TryGetFeatureValue(CommonUsages.primaryButton, out primary);
+        rightHand.TryGetFeatureValue(CommonUsages.secondaryButton, out secondary);
+
+        // إذا ضغط أي زر
+        if (!isHidden && (primary || secondary))
         {
-            if (!isHidden && isPressed && !wasPressed)
+            foreach (GameObject canvas in canvases)
             {
-                foreach (GameObject canvas in canvases)
-                {
+                if (canvas != null)
                     canvas.SetActive(false);
-                }
-
-                isHidden = true;
             }
 
-            wasPressed = isPressed;
+            isHidden = true;
         }
     }
 }
