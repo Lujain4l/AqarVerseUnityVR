@@ -18,14 +18,12 @@ public class OnBordingCanves : MonoBehaviour
         if (!rightHand.isValid)
             rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 
-        bool primary = false;   // A
         bool secondary = false; // B
 
-        rightHand.TryGetFeatureValue(CommonUsages.primaryButton, out primary);
         rightHand.TryGetFeatureValue(CommonUsages.secondaryButton, out secondary);
 
-        // إذا ضغط أي زر
-        if (!isHidden && (primary || secondary))
+        // إذا ضغط زر B
+        if (!isHidden && secondary)
         {
             foreach (GameObject canvas in canvases)
             {
