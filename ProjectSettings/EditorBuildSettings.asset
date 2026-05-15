@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Blue Dot Studios/Modern Neighborhood House/Scenes/MNH_Day.unity
     guid: 85a6b635a079a124db1a50ebe9670ce0
+  - enabled: 1
+    path: Assets/Scenes/CompanyScene.unity
+    guid: f4c647c46d3514bfbb438021ca5e2074
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 32808625dbcd7664590a6561e4c289c3,
       type: 2}
