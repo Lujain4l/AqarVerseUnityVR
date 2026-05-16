@@ -722,8 +722,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.74, y: -12.871}
-  m_SizeDelta: {x: 178.77, y: 30.441}
+  m_AnchoredPosition: {x: 0.01, y: -12.871}
+  m_SizeDelta: {x: 201.2, y: 30.44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &542311426
 MonoBehaviour:
@@ -1402,8 +1402,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.25, y: 12.36}
-  m_SizeDelta: {x: 176.75, y: 28.39}
+  m_AnchoredPosition: {x: 0.1, y: 12.36}
+  m_SizeDelta: {x: 202.77, y: 28.39}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &956873840
 MonoBehaviour:
@@ -2563,7 +2563,8 @@ MonoBehaviour:
   passwordInput: {fileID: 542311427}
   statusText: {fileID: 1223843891}
   uiManager: {fileID: 1890039675}
-  nextSceneName: MNH_Day
+  customerSceneName: MNH_Day
+  companySceneName: CompanyScene
 --- !u!1 &2070955790
 GameObject:
   m_ObjectHideFlags: 0
